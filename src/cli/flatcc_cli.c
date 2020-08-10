@@ -40,6 +40,7 @@ void usage(FILE *fp)
             "  --json-parser              Generate json parser for schema\n"
             "  --json-printer             Generate json printer for schema\n"
             "  --json                     Generate both json parser and printer for schema\n"
+            "  --build2-metadata          Print metadata for build2\n"
             "  --version                  Show version\n"
             "  -h | --help                Help message\n"
     );
@@ -171,6 +172,20 @@ int set_opt(flatcc_options_t *opts, const char *s, const char *a)
         /* stdout so less and more works. */
         help(stdout);
         exit(0);
+    }
+    if (match_long_arg("-build2-metadata", s, n)) {
+        fprintf(stdout, "# build2 buildfile flatcc\n");
+        fprintf(stdout, "export.metadata = 1 flatcc\n");
+        fprintf(stdout, "flatcc.name = [string] flatcc\n");
+        fprintf(stdout, "flatcc.version = [string] '%d.%d.%d%s'\n",
+                FLATCC_VERSION_MAJOR, FLATCC_VERSION_MINOR, FLATCC_VERSION_PATCH,
+                (FLATCC_VERSION_RELEASED ? "" : "-a.1"));
+        fprintf(stdout, "flatcc.checksum = [string] '%d.%d.%d%s'\n",
+                FLATCC_VERSION_MAJOR, FLATCC_VERSION_MINOR, FLATCC_VERSION_PATCH,
+                (FLATCC_VERSION_RELEASED ? "" : "-a.1"));
+        exit(0);
+    }
+    if (0 == strcmp("-build2-metadata", s)) {
     }
     if (0 == strcmp("-version", s)) {
         fprintf(stderr, "%s\n", TITLE);
